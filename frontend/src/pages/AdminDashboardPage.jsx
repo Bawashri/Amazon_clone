@@ -236,7 +236,7 @@ const AdminDashboardPage = () => {
   };
 
   return (
-    <section>
+    <section className="admin-page">
       <h2>Admin Dashboard</h2>
       <div className="admin-layout">
         <aside className="card admin-sidebar">

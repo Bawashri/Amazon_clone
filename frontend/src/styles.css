@@ -1,16 +1,26 @@
-﻿:root {
+:root {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #111111;
-  background: #f7f7f7;
+  color: #e6f0ff;
+  background: #0b1220;
+  --bg-primary: #0b1220;
+  --bg-secondary: #0f1b33;
+  --bg-elevated: #122446;
+  --border-subtle: #1e3a8a;
+  --border-strong: #2563eb;
+  --accent: #60a5fa;
+  --accent-strong: #2563eb;
+  --text-primary: #e6f0ff;
+  --text-muted: #b3c6e6;
+  --text-strong: #ffffff;
 }
-
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background: linear-gradient(180deg, #fff8e6 0%, #f7f7f7 40%);
+  background: linear-gradient(180deg, #0b1220 0%, #0f1b33 50%, #122446 100%);
+  color: var(--text-primary);
 }
 
 .container {
@@ -20,8 +30,8 @@ body {
 }
 
 .navbar {
-  background: linear-gradient(90deg, #0f1111, #1b1d1d);
-  color: #fff;
+  background: linear-gradient(90deg, #0b1220, #122446);
+  color: var(--text-strong);
   padding: 0.8rem 1rem;
   display: flex;
   justify-content: space-between;
@@ -37,13 +47,13 @@ body {
 }
 
 .navbar a {
-  color: #ffd814;
+  color: var(--accent);
   text-decoration: none;
   font-weight: 600;
 }
 
 .navbar a:hover {
-  color: #ffec99;
+  color: #93c5fd;
 }
 
 .brand {
@@ -55,12 +65,12 @@ body {
 }
 
 .card {
-  background: #fff;
+  background: var(--bg-secondary);
   border-radius: 10px;
   padding: 1rem;
   margin-bottom: 1rem;
-  border: 1px solid #f0c14b;
-  box-shadow: 0 2px 12px rgba(15, 17, 17, 0.08);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 8px 22px rgba(2, 8, 23, 0.4);
 }
 
 .grid {
@@ -103,7 +113,7 @@ body {
 
 .product-desc {
   margin: 0;
-  color: #333;
+  color: var(--text-muted);
   min-height: 3.6em;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -133,7 +143,7 @@ body {
 
 .product-details-link {
   margin-top: 0.35rem;
-  color: #232f3e;
+  color: #93c5fd;
   font-weight: 600;
   text-decoration: none;
 }
@@ -168,40 +178,42 @@ select,
 button {
   padding: 0.6rem 0.7rem;
   border-radius: 6px;
-  border: 1px solid #d5d9d9;
+  border: 1px solid var(--border-subtle);
+  background: #0b1730;
+  color: var(--text-primary);
 }
 
 button {
-  border: 1px solid #fcd200;
-  background: #ffd814;
-  color: #111111;
+  border: 1px solid var(--border-strong);
+  background: var(--accent-strong);
+  color: var(--text-strong);
   font-weight: 600;
   cursor: pointer;
 }
 
 .btn-secondary {
-  border: 1px solid #111111;
-  background: #232f3e;
-  color: #ffd814;
+  border: 1px solid #1e293b;
+  background: #1e293b;
+  color: var(--text-primary);
 }
 
 .btn-buy {
-  border: 1px solid #f2c200;
-  background: #ffcc00;
-  color: #111111;
+  border: 1px solid #3b82f6;
+  background: #3b82f6;
+  color: var(--text-strong);
 }
 
 button:hover {
-  background: #f7ca00;
+  background: #1d4ed8;
 }
 
 .btn-secondary:hover {
-  background: #111111;
-  color: #ffec99;
+  background: #0f172a;
+  color: var(--text-strong);
 }
 
 .btn-buy:hover {
-  background: #f2c200;
+  background: #2563eb;
 }
 
 .admin-products .admin-product-row {
@@ -209,7 +221,7 @@ button:hover {
   align-items: center;
   flex-wrap: nowrap;
   padding: 0.5rem 0;
-  border-bottom: 1px solid #f0c14b;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .admin-products .admin-product-row span {
@@ -230,7 +242,7 @@ button:hover {
   align-items: center;
   flex-wrap: nowrap;
   padding: 0.5rem 0;
-  border-bottom: 1px solid #f0c14b;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .admin-orders .admin-order-row span {
@@ -251,7 +263,7 @@ button:hover {
   align-items: center;
   flex-wrap: nowrap;
   padding: 0.5rem 0;
-  border-bottom: 1px solid #f0c14b;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .admin-pending .admin-pending-row:last-child {
@@ -268,15 +280,15 @@ button:hover {
 }
 
 .error {
-  color: #b91c1c;
+  color: #f87171;
 }
 
 .info {
-  color: #b77900;
+  color: #93c5fd;
 }
 
 .muted {
-  color: #444444;
+  color: var(--text-muted);
   font-size: 0.9rem;
 }
 
@@ -296,7 +308,7 @@ button:hover {
 .price {
   margin: 0.25rem 0 0;
   font-weight: 700;
-  color: #232f3e;
+  color: #93c5fd;
 }
 
 .product-card .price + .muted {
@@ -314,7 +326,7 @@ button:hover {
   align-items: center;
   gap: 0.45rem;
   font-size: 0.9rem;
-  color: #333;
+  color: var(--text-muted);
 }
 
 .qty-input {
@@ -326,7 +338,7 @@ button:hover {
 .empty-state {
   text-align: center;
   padding: 1.5rem;
-  color: #555;
+  color: var(--text-muted);
 }
 
 .profile-card {
@@ -364,7 +376,7 @@ button:hover {
 }
 
 .product-back-link {
-  color: #232f3e;
+  color: #93c5fd;
   text-decoration: none;
   font-weight: 600;
 }
@@ -413,12 +425,38 @@ button:hover {
   grid-template-columns: 240px minmax(0, 1fr);
   gap: 1rem;
   align-items: start;
+  min-height: 100vh;
+}
+
+.admin-page {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding: 0 1.5rem 2rem 0;
+}
+
+.admin-layout .card {
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 12px 28px rgba(2, 8, 23, 0.45);
+}
+
+.admin-layout .card h3 {
+  margin-top: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #1e3a8a;
+  color: var(--text-strong);
 }
 
 .admin-sidebar {
+  background: #0b1220;
+  color: var(--text-strong);
+  padding: 1rem 0.85rem;
+  border-radius: 0;
+  margin-left: 0;
   margin-bottom: 0;
   position: sticky;
-  top: 1rem;
+  top: 0;
+  height: 100vh;
+  align-self: stretch;
 }
 
 .admin-sidebar nav {
@@ -430,27 +468,51 @@ button:hover {
 .admin-nav-link {
   display: block;
   padding: 0.65rem 0.75rem;
-  border: 1px solid #d5d9d9;
+  border: 1px solid transparent;
   border-radius: 6px;
   text-decoration: none;
-  color: #111111;
+  color: var(--text-strong);
   font-weight: 600;
-  background: #f8f9fa;
+  background: transparent;
 }
 
 .admin-nav-link:hover {
-  background: #f3f3f3;
+  background: #0f1b33;
 }
 
 .admin-nav-link.active {
-  border-color: #f0c14b;
-  background: #fff8e6;
+  border-color: var(--border-strong);
+  background: #122446;
+}
+
+.admin-content button {
+  border: 1px solid var(--border-strong);
+  background: var(--accent-strong);
+  color: var(--text-strong);
+}
+
+.admin-content button:hover {
+  background: #1d4ed8;
+}
+
+.admin-content .btn-secondary {
+  border: 1px solid #1e293b;
+  background: #1e293b;
+  color: var(--text-primary);
+}
+
+.admin-content .btn-secondary:hover {
+  background: #0f172a;
 }
 
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .admin-page {
+    padding: 0 1rem 2rem;
   }
 
   .list-card {
@@ -474,6 +536,8 @@ button:hover {
 
   .admin-sidebar {
     position: static;
+    margin-left: 0;
+    height: auto;
   }
 
   .admin-sidebar nav {
@@ -496,3 +560,6 @@ button:hover {
     width: 100%;
   }
 }
+
+
+
