@@ -1,4 +1,5 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { NavLink, Outlet, useOutletContext } from "react-router-dom";
 import api from "../api/axios";
 
 const emptyProduct = {
@@ -8,6 +9,133 @@ const emptyProduct = {
   category_id: "",
   stock: "",
   image_url: ""
+};
+
+const useAdminContext = () => useOutletContext();
+
+export const AdminPendingOrdersSection = () => {
+  const { pendingOrders, approve, reject } = useAdminContext();
+
+  return (
+    <div className="card admin-pending">
+      <h3>Pending Orders</h3>
+      {!pendingOrders.length && <p className="muted">No pending orders.</p>}
+      {pendingOrders.map((o) => (
+        <div className="row admin-pending-row" key={o.id}>
+          <span>
+            #{o.id} {o.user_name} - {o.product_name} x{o.quantity}
+          </span>
+          <div className="actions-inline">
+            <button onClick={() => approve(o.id)}>Approve</button>
+            <button className="btn-secondary" onClick={() => reject(o.id)}>
+              Reject
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export const AdminAddProductSection = () => {
+  const { categories, form, setForm, editingId, submitProduct, cancelEdit } = useAdminContext();
+
+  return (
+    <div className="card form-card">
+      <h3>{editingId ? "Edit Product" : "Add Product"}</h3>
+      <form onSubmit={submitProduct}>
+        <input placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+        <input
+          placeholder="Description"
+          value={form.description}
+          onChange={(e) => setForm({ ...form, description: e.target.value })}
+          required
+        />
+        <input
+          placeholder="Price"
+          type="number"
+          value={form.price}
+          onChange={(e) => setForm({ ...form, price: e.target.value })}
+          required
+        />
+        <select value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} required>
+          <option value="">Select category</option>
+          {categories.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+        <input
+          placeholder="Stock"
+          type="number"
+          value={form.stock}
+          onChange={(e) => setForm({ ...form, stock: e.target.value })}
+          required
+        />
+        <input placeholder="Image URL" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} />
+        <div className="actions-inline">
+          <button type="submit">{editingId ? "Save Changes" : "Create Product"}</button>
+          {editingId && (
+            <button type="button" className="btn-secondary" onClick={cancelEdit}>
+              Cancel
+            </button>
+          )}
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export const AdminAllOrdersSection = () => {
+  const { orders, ordersError, updateOrderStatus } = useAdminContext();
+
+  return (
+    <div className="card admin-orders">
+      <h3>All Orders</h3>
+      {ordersError && <p className="error">{ordersError}</p>}
+      {!orders.length && <p className="muted">No orders yet.</p>}
+      {orders.map((o) => (
+        <div className="row admin-order-row" key={o.id}>
+          <span>
+            #{o.id} {o.user_name} - {o.product_name} x{o.quantity} ({o.status})
+          </span>
+          <div className="actions-inline">
+            <button onClick={() => updateOrderStatus(o.id, "SHIPPED")} disabled={o.status !== "APPROVED"}>
+              Mark Shipped
+            </button>
+            <button className="btn-secondary" onClick={() => updateOrderStatus(o.id, "DELIVERED")} disabled={o.status !== "SHIPPED"}>
+              Mark Delivered
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export const AdminAllProductsSection = () => {
+  const { products, startEdit, deleteProduct } = useAdminContext();
+
+  return (
+    <div className="card admin-products">
+      <h3>All Products</h3>
+      {!products.length && <p className="muted">No products found.</p>}
+      {products.map((p) => (
+        <div className="row admin-product-row" key={p.id}>
+          <span>
+            {p.name} - Rs. {Number(p.price).toFixed(2)}
+          </span>
+          <div className="actions-inline">
+            <button onClick={() => startEdit(p)}>Edit</button>
+            <button className="btn-secondary" onClick={() => deleteProduct(p.id)}>
+              Delete
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 };
 
 const AdminDashboardPage = () => {
@@ -68,11 +196,13 @@ const AdminDashboardPage = () => {
       category_id: Number(form.category_id),
       stock: Number(form.stock)
     };
+
     if (editingId) {
       await api.put(`/products/${editingId}`, payload);
     } else {
       await api.post("/products", payload);
     }
+
     setForm(emptyProduct);
     setEditingId(null);
     load();
@@ -108,112 +238,45 @@ const AdminDashboardPage = () => {
   return (
     <section>
       <h2>Admin Dashboard</h2>
+      <div className="admin-layout">
+        <aside className="card admin-sidebar">
+          <nav>
+            <NavLink to="pending-orders" className={({ isActive }) => (isActive ? "admin-nav-link active" : "admin-nav-link")}>
+              Pending Orders
+            </NavLink>
+            <NavLink to="add-product" className={({ isActive }) => (isActive ? "admin-nav-link active" : "admin-nav-link")}>
+              Add Product
+            </NavLink>
+            <NavLink to="all-orders" className={({ isActive }) => (isActive ? "admin-nav-link active" : "admin-nav-link")}>
+              All Orders
+            </NavLink>
+            <NavLink to="all-products" className={({ isActive }) => (isActive ? "admin-nav-link active" : "admin-nav-link")}>
+              All Products
+            </NavLink>
+          </nav>
+        </aside>
 
-      <div className="card admin-pending">
-        <h3>Pending Orders</h3>
-        {pendingOrders.map((o) => (
-          <div className="row admin-pending-row" key={o.id}>
-            <span>
-              #{o.id} {o.user_name} - {o.product_name} x{o.quantity}
-            </span>
-            <div className="actions-inline">
-              <button onClick={() => approve(o.id)}>Approve</button>
-              <button className="btn-secondary" onClick={() => reject(o.id)}>
-                Reject
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="card form-card">
-        <h3>{editingId ? "Edit Product" : "Add Product"}</h3>
-        <form onSubmit={submitProduct}>
-          <input placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-          <input
-            placeholder="Description"
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            required
+        <div className="admin-content">
+          <Outlet
+            context={{
+              pendingOrders,
+              approve,
+              reject,
+              categories,
+              form,
+              setForm,
+              editingId,
+              submitProduct,
+              cancelEdit,
+              orders,
+              ordersError,
+              updateOrderStatus,
+              products,
+              startEdit,
+              deleteProduct
+            }}
           />
-          <input
-            placeholder="Price"
-            type="number"
-            value={form.price}
-            onChange={(e) => setForm({ ...form, price: e.target.value })}
-            required
-          />
-          <select value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} required>
-            <option value="">Select category</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-          <input
-            placeholder="Stock"
-            type="number"
-            value={form.stock}
-            onChange={(e) => setForm({ ...form, stock: e.target.value })}
-            required
-          />
-          <input
-            placeholder="Image URL"
-            value={form.image_url}
-            onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-          />
-          <div className="actions-inline">
-            <button type="submit">{editingId ? "Save Changes" : "Create Product"}</button>
-            {editingId && (
-              <button type="button" className="btn-secondary" onClick={cancelEdit}>
-                Cancel
-              </button>
-            )}
-          </div>
-        </form>
-      </div>
-
-      <div className="card admin-orders">
-        <h3>All Orders</h3>
-        {ordersError && <p className="error">{ordersError}</p>}
-        {!orders.length && <p className="muted">No orders yet.</p>}
-        {orders.map((o) => (
-          <div className="row admin-order-row" key={o.id}>
-            <span>
-              #{o.id} {o.user_name} - {o.product_name} x{o.quantity} ({o.status})
-            </span>
-            <div className="actions-inline">
-              <button onClick={() => updateOrderStatus(o.id, "SHIPPED")} disabled={o.status !== "APPROVED"}>
-                Mark Shipped
-              </button>
-              <button
-                className="btn-secondary"
-                onClick={() => updateOrderStatus(o.id, "DELIVERED")}
-                disabled={o.status !== "SHIPPED"}
-              >
-                Mark Delivered
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="card admin-products">
-        <h3>All Products</h3>
-        {products.map((p) => (
-          <div className="row admin-product-row" key={p.id}>
-            <span>
-              {p.name} - Rs. {Number(p.price).toFixed(2)}
-            </span>
-            <div className="actions-inline">
-              <button onClick={() => startEdit(p)}>Edit</button>
-              <button className="btn-secondary" onClick={() => deleteProduct(p.id)}>
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
+        </div>
       </div>
     </section>
   );

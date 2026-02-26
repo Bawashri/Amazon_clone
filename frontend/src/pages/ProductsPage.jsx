@@ -1,5 +1,5 @@
 ﻿import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 
@@ -55,13 +55,7 @@ const ProductsPage = () => {
       return;
     }
     const quantity = Math.max(1, Number(quantities[product_id] ?? 1) || 1);
-    const { data } = await api.post("/orders/buy", { product_id, quantity });
-    setMessage(data.message);
-    if (data?.message) {
-      window.alert(data.message);
-    } else {
-      window.alert("Order placed");
-    }
+    navigate(`/buy-now/${product_id}?qty=${quantity}`);
   };
 
   const addToCart = async (product_id) => {
@@ -126,8 +120,14 @@ const ProductsPage = () => {
       <div className="grid">
         {products.map((p) => (
           <article key={p.id} className="card product-card">
-            <img src={p.image_url} alt={p.name} />
-            <h3>{p.name}</h3>
+            <Link to={`/products/${p.id}`} className="product-link">
+              <img src={p.image_url} alt={p.name} />
+            </Link>
+            <h3>
+              <Link to={`/products/${p.id}`} className="product-link">
+                {p.name}
+              </Link>
+            </h3>
             <p className="product-desc">{p.description}</p>
             <p>
               <strong>Price: Rs. {Number(p.price).toFixed(2)}</strong>
@@ -158,6 +158,9 @@ const ProductsPage = () => {
                 Buy Now
               </button>
             </div>
+            <Link to={`/products/${p.id}`} className="product-details-link">
+              View Product Details
+            </Link>
           </article>
         ))}
       </div>
